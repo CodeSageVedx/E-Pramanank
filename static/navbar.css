@@ -1,0 +1,145 @@
+/* Navbar Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.navbar {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 1200px;
+    padding: 1rem 2rem;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.navbar:hover {
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: #1a2a6c;
+}
+
+.logo span {
+    color: #3b82f6;
+}
+
+.nav-items {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.nav-item {
+    position: relative;
+    text-decoration: none;
+    color: #1a2a6c;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.5rem 0;
+    transition: all 0.3s ease;
+}
+
+.nav-item::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background: #3b82f6;
+    transition: width 0.3s ease;
+}
+
+.nav-item:hover::after {
+    width: 100%;
+}
+
+.nav-item:hover {
+    color: #3b82f6;
+}
+
+.register-btn {
+    background: #3b82f6;
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+}
+
+.register-btn:hover {
+    background: #2563eb;
+    color: white;
+}
+
+.hamburger {
+    display: none;
+    font-size: 1.8rem;
+    background: none;
+    border: none;
+    color: #1a2a6c;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+/* Responsive Navbar */
+@media (max-width: 768px) {
+    .navbar {
+        width: 95%;
+        padding: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .hamburger {
+        display: block;
+    }
+
+    .nav-items {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 1rem 0;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 0 0 12px 12px;
+    }
+
+    .nav-items.active {
+        display: flex;
+    }
+
+    .nav-item {
+        font-size: 1.1rem;
+    }
+
+    .nav-item::after {
+        display: none;
+    }
+
+    .register-btn {
+        padding: 0.8rem 2rem;
+        width: 50%;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo { font-size: 1.5rem; }
+    .hamburger { font-size: 1.6rem; }
+    .nav-item { font-size: 1rem; }
+}

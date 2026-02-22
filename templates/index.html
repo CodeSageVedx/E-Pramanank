@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>eKYC Platform - Secure Identity Verification</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="static/navbar.css" />
+    <link rel="stylesheet" href="static/style.css" />
+    <!-- Load pdf.js from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <!-- Load Tesseract.js from jsDelivr CDN -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.0/dist/tesseract.min.js"
+      crossorigin="anonymous"
+      onload="console.log('Tesseract.js main script loaded successfully')"
+      onerror="console.error('Failed to load Tesseract.js main script from CDN')"
+    ></script>
+    <!-- Load html2canvas for capturing the card -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Load jsPDF for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Load CryptoJS for encryption -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+      /* Existing styles for editable fields */
+      .data-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .edit-btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: background-color 0.3s ease;
+      }
+      .edit-btn:hover {
+        background-color: #0056b3;
+      }
+      .edit-input {
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+        width: 200px;
+      }
+      .save-btn {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: background-color 0.3s ease;
+      }
+      .save-btn:hover {
+        background-color: #218838;
+      }
+      /* Styles for the ID card */
+      /* Existing styles for editable fields */
+.data-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.edit-btn {
+  background: rgba(109, 40, 217, 0.3); /* Purple glassmorphic background */
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.edit-btn:hover {
+  background: rgba(109, 40, 217, 0.5);
+  box-shadow: 0 0 10px rgba(109, 40, 217, 0.5); /* Glowing purple shadow */
+  transform: translateY(-1px);
+}
+
+.edit-input {
+  padding: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  font-size: 14px;
+  font-family: 'Poppins', sans-serif;
+  width: 200px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #F3F4F6; /* Lighter gray for better readability */
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.edit-input:focus {
+  border-color: #6D28D9;
+  box-shadow: 0 0 5px rgba(109, 40, 217, 0.3);
+}
+
+.save-btn {
+  background: rgba(16, 185, 129, 0.3); /* Green glassmorphic background */
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.save-btn:hover {
+  background: rgba(16, 185, 129, 0.5);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5); /* Glowing green shadow */
+  transform: translateY(-1px);
+}
+
+/* ID Card Section */
+/* Existing styles for editable fields */
+.data-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.edit-btn {
+  background: rgba(109, 40, 217, 0.3);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.edit-btn:hover {
+  background: rgba(109, 40, 217, 0.5);
+  box-shadow: 0 0 10px rgba(109, 40, 217, 0.5);
+  transform: translateY(-1px);
+}
+
+.edit-input {
+  padding: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  font-size: 14px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  width: 200px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #F3F4F6;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.edit-input:focus {
+  border-color: #6D28D9;
+  box-shadow: 0 0 5px rgba(109, 40, 217, 0.3);
+}
+
+.save-btn {
+  background: rgba(16, 185, 129, 0.3);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.save-btn:hover {
+  background: rgba(16, 185, 129, 0.5);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+  transform: translateY(-1px);
+}
+
+/* ID Card Section */
+.id-card-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin: 30px 0;
+  padding: 40px 20px; /* Increased padding to move content away from section boundaries */
+}
+
+/* Personal Identity Card */
+.id-card {
+  width: 544px; /* Increased width for a more standard card look */
+  padding: 20px; /* Adjusted padding for better proportions */
+  border-radius: 15px;
+  background: linear-gradient(135deg, #2A6A6E 0%, #6ACFC7 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.3);
+  margin-top: 30px; /* Added padding on top to move away from section */
+}
+
+/* Shine effect */
+.id-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transform: skewX(-25deg);
+  animation: shine 3s infinite;
+}
+
+@keyframes shine {
+  0% {
+    left: -100%;
+  }
+  50% {
+    left: 100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Card Header */
+.id-card-header {
+  position: relative;
+  text-align: center;
+  margin-bottom: 10px;
+  border-bottom: 5px solid rgba(0, 0, 0, 0.3);
+}
+
+.id-card-header h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  text-shadow: 0 0 5px rgba(109, 40, 217, 0.5);
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Verified Mark */
+.id-card-header .verified-mark {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 1.5rem;
+  color: #10B981;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Card Content */
+.id-card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+/* Card Details (Text Section) */
+.id-card-details {
+  flex: 1;
+}
+
+.id-card-details p {
+  font-size: 0.95rem;
+  margin: 6px 0;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+}
+
+.id-card-details p strong {
+  font-weight: 600;
+  color: #FFFFFF;
+  text-shadow: 0 0 5px rgba(109, 40, 217, 0.5);
+  min-width: 150px; /* Fixed width for labels to ensure alignment */
+}
+
+.id-card-details p span {
+  color: #E5E7EB;
+  font-weight: 600;
+  flex: 1; /* Allow values to take remaining space */
+}
+
+/* Card Image */
+.id-card-image {
+  width: 90px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Card Footer */
+.id-card-footer {
+  margin-top: 10px;
+  padding-top: 10px;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.id-card-footer p {
+  font-size: 0.75rem;
+  color: #D1D5DB;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+}
+
+/* Button Container */
+.button-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 30px; /* Added padding on bottom to move away from section */
+}
+
+/* Buttons */
+.download-btn,
+.share-btn {
+  width: 150px;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #FFFFFF;
+  background: linear-gradient(135deg, #2A6A6E 0%, #6ACFC7 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+}
+
+/* Shine effect for buttons */
+.download-btn::before,
+.share-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transform: skewX(-25deg);
+  animation: shine 3s infinite;
+}
+
+/* Hover effect for buttons */
+.download-btn:hover,
+.share-btn:hover {
+  background: linear-gradient(135deg, #1F5154 0%, #5AB8B0 100%);
+  box-shadow: 0 0 15px rgba(106, 207, 199, 0.5);
+  transform: translateY(-2px);
+}
+
+/* Active effect for buttons */
+.download-btn:active,
+.share-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+      /* Password Modal */
+      .password-modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+      .password-modal-content {
+        background-color: #fff;
+        margin: 15% auto;
+        padding: 20px;
+        border-radius: 10px;
+        width: 80%;
+        max-width: 400px;
+        text-align: center;
+      }
+      .password-modal-content h3 {
+        margin-top: 0;
+      }
+      .password-modal-content input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      .password-modal-content button {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      .password-modal-content button:hover {
+        background-color: #218838;
+      }
+      .password-modal-content .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 24px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+<nav class="navbar">
+  <a href="/" class="logo"> <span>e</span>KYC </a>
+  <button class="hamburger">☰</button>
+  <div class="nav-items">
+    {% if user.is_authenticated %}
+      <span class="nav-item">Welcome, {{ user.username }}!</span>
+      <a href="/" class="nav-item">Home</a>
+      <a href="about" class="nav-item">About</a>
+      <a href="#features" class="nav-item">Features</a>
+      <a href="#contact" class="nav-item">Contact</a>
+      <a href="register" class="nav-item register-btn">Profile</a>
+    {% else %}
+      <a href="/" class="nav-item">Home</a>
+      <a href="about" class="nav-item">About</a>
+      <a href="#features" class="nav-item">Features</a>
+      <a href="#contact" class="nav-item">Contact</a>
+      <a href="register" class="nav-item register-btn">Profile</a>
+    {% endif %}
+  </div>
+</nav>
+
+
+    <!-- Main Content -->
+    <div class="container">
+      <section class="hero" id="home">
+        <div class="hero-content">
+          <h1>Streamline Your Identity Verification</h1>
+          <p class="subtitle">
+            Secure, fast, and reliable eKYC solutions for individuals,
+            businesses, and government.
+          </p>
+          <a href="#info" class="cta-button hero-cta">Get Started</a>
+        </div>
+      </section>
+
+      <section class="section about" id="info">
+        <h2>Simplify KYC with eKYC</h2>
+        <div class="about-content">
+          <div class="upload-section">
+            <button class="upload-btn" id="upload-btn">
+              Upload Aadhaar Card
+            </button>
+          </div>
+          <div class="upload-content">
+            <p>
+              Upload your Aadhaar card (front and back) to extract and validate
+              details securely using advanced OCR technology.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Uploaded Image Display -->
+      <section
+        class="section uploaded-image"
+        id="uploaded-image"
+        style="display: none"
+      >
+        <h2>Your Uploaded Aadhaar Card</h2>
+        <div class="image-container">
+          <div class="image-wrapper">
+            <h3>Front Side</h3>
+            <img
+              id="front-img"
+              src=""
+              alt="Front Side"
+              style="max-width: 100%; border-radius: 12px"
+            />
+          </div>
+          <div class="image-wrapper">
+            <h3>Back Side</h3>
+            <img
+              id="back-img"
+              src=""
+              alt="Back Side"
+              style="max-width: 100%; border-radius: 12px"
+            />
+          </div>
+        </div>
+        <button class="extract-btn" id="extract-btn">Extract Text</button>
+      </section>
+
+      <!-- Extracted Data Display -->
+      <section
+        class="section extracted-data"
+        id="extracted-data"
+        style="display: none"
+      >
+        <h2>Extracted Aadhaar Information</h2>
+        <div class="data-list">
+          <div class="data-item">
+            <strong>Government:</strong> <span id="government"></span>
+            <button class="edit-btn" data-field="government">Edit</button>
+          </div>
+          <div class="data-item">
+            <strong>Name:</strong> <span id="name"></span>
+            <button class="edit-btn" data-field="name">Edit</button>
+          </div>
+          <div class="data-item">
+            <strong>Date of Birth:</strong> <span id="dob"></span>
+            <button class="edit-btn" data-field="dob">Edit</button>
+          </div>
+          <div class="data-item">
+            <strong>Gender:</strong> <span id="gender"></span>
+            <button class="edit-btn" data-field="gender">Edit</button>
+          </div>
+          <div class="data-item">
+            <strong>Aadhaar Number:</strong> <span id="aadhaar"></span>
+            <button class="edit-btn" data-field="aadhaar">Edit</button>
+          </div>
+          <div class="data-item">
+            <strong>Father's Name:</strong> <span id="father"></span>
+            <button class="edit-btn" data-field="father">Edit</button>
+          </div>
+          <div class="data-item">
+            <strong>Address:</strong> <span id="address"></span>
+            <button class="edit-btn" data-field="address">Edit</button>
+          </div>
+          <div class="data-item">
+            <strong>Person's Image:</strong>
+            <img
+              id="person-img"
+              src=""
+              alt="Person"
+              style="max-width: 100px; border-radius: 8px"
+            />
+            <button id="upload-person-img-btn" class="edit-btn">Upload Image</button>
+            <input
+              type="file"
+              id="person-img-input"
+              accept="image/*"
+              style="display: none"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- ID Card Display -->
+      <section class="section id-card-section" id="id-card-section">
+        <div class="id-card" id="id-card">
+          <div class="id-card-header">
+            <h2>Personal Identity Card</h2>
+            <span class="verified-mark">✔</span>
+          </div>
+          <div class="id-card-content">
+            <div class="id-card-details">
+              <p><strong>Name:</strong> <span id="id-name"></span></p>
+              <p><strong>Date of Birth:</strong> <span id="id-dob"></span></p>
+              <p><strong>Gender:</strong> <span id="id-gender"></span></p>
+              <p><strong>Aadhaar Number:</strong> <span id="id-aadhaar"></span></p>
+              <p><strong>Father's Name:</strong> <span id="id-father"></span></p>
+              <p><strong>Address:</strong> <span id="id-address"></span></p>
+            </div>
+            <img id="id-person-img" class="id-card-image" src="" alt="Person" />
+          </div>
+          <div class="id-card-footer">
+            <p>Generated by eKYC Platform</p>
+          </div>
+        </div>
+        <div class="button-container">
+          <button class="download-btn" id="download-btn">Download PDF</button>
+          <button class="share-btn" id="share-whatsapp-btn">Share via WhatsApp</button>
+          <button class="share-btn" id="share-email-btn">Share via Email</button>
+        </div>
+      </section>
+
+      <!-- Password Modal for Sharing -->
+      <div class="password-modal" id="password-modal">
+        <div class="password-modal-content">
+          <span class="close-btn" id="password-modal-close">×</span>
+          <h3>Set Password for Sharing</h3>
+          <p>Enter a password that the recipient will use to access the PDF.</p>
+          <input type="text" id="share-password-input" placeholder="Enter password" />
+          <button id="share-password-submit">Share</button>
+        </div>
+      </div>
+
+      <section class="section features" id="features">
+        <h2>Why eKYC Platform?</h2>
+        <div class="features-list">
+          <div class="feature-item">
+            <div class="feature-icon">📷</div>
+            <h3>Advanced OCR</h3>
+            <p>Instantly extract details from your IDs with precision.</p>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🔒</div>
+            <h3>Face Verification</h3>
+            <p>Ensure authenticity with OpenCV-powered face matching.</p>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">💾</div>
+            <h3>Secure Storage</h3>
+            <p>Your data is encrypted and safely stored.</p>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🤝</div>
+            <h3>Integration</h3>
+            <p>Seamless sharing with government and businesses.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta-section" id="register">
+        <h2>Ready to Simplify Your KYC?</h2>
+        <a href="register" class="cta-button">Register Today</a>
+      </section>
+    </div>
+
+    <!-- Upload Modal -->
+    <div class="modal" id="upload-modal">
+      <div class="modal-content">
+        <span class="close-btn">x</span>
+        <h3>Select Upload Method</h3>
+        <div class="upload-options">
+          <button id="drive-btn" class="option-btn">From Drive</button>
+          <button id="camera-btn" class="option-btn">Scan with Camera</button>
+          <button id="front-upload-btn" class="option-btn">
+            Upload Front Side
+          </button>
+          <button id="back-upload-btn" class="option-btn" style="display: none">
+            Upload Back Side
+          </button>
+        </div>
+        <input
+          type="file"
+          id="file-input"
+          accept="image/*,application/pdf"
+          style="display: none"
+        />
+      </div>
+    </div>
+
+    <!-- Camera Scanner Modal -->
+    <div class="modal" id="camera-modal">
+      <div class="modal-content camera-modal-content">
+        <span class="close-btn camera-close-btn">×</span>
+        <h3>Scan Your Document</h3>
+        <p id="camera-instruction">
+          Scan Front Side (Click Capture, then scan Back Side)
+        </p>
+        <video id="video" autoplay playsinline></video>
+        <canvas id="canvas" style="display: none"></canvas>
+        <button id="capture-btn" class="option-btn">Capture</button>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="static/js/script.js"></script>
+  </body>
+</html>

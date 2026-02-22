@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About eKYC Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="static/navbar.css">
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="static/about.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="/" class="logo">
+            <span>e</span>KYC
+        </a>
+        <button class="hamburger">☰</button>
+        <div class="nav-items">
+            <a href="/" class="nav-item">Home</a>
+            <a href="about" class="nav-item active">About</a>
+            <a href="index.html#features" class="nav-item">Features</a>
+            <a href="index.html#contact" class="nav-item">Contact</a>
+            <a href="register" class="nav-item register-btn">Register</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <section class="hero about-hero" id="about">
+            <div class="hero-content">
+                <h1>About eKYC Platform</h1>
+                <p class="subtitle">A secure, efficient, and innovative solution for digital identity verification.</p>
+            </div>
+        </section>
+
+        <section class="section about-section">
+            <h2>Our Mission</h2>
+            <p class="section-text">The eKYC Platform is designed to revolutionize the way identity verification is conducted. By leveraging advanced OCR technology and OpenCV-powered face verification, we provide a seamless bridge between individuals, government entities, and businesses, ensuring secure and rapid KYC processes.</p>
+        </section>
+
+        <section class="section workflow-section">
+            <h2>How It Works</h2>
+            <p class="section-text">From registration to data sharing, our platform streamlines the entire KYC journey. Here’s a step-by-step overview:</p>
+            <div class="flowchart">
+                <div class="flow-step">
+                    <div class="step-number">1</div>
+                    <h3>User Registration</h3>
+                    <p>Sign up with basic details to create your secure profile.</p>
+                </div>
+                <div class="flow-arrow">➔</div>
+                <div class="flow-step">
+                    <div class="step-number">2</div>
+                    <h3>Document Upload</h3>
+                    <p>Upload your ID (Aadhar, PAN, etc.) via scan, file, or Drive.</p>
+                </div>
+                <div class="flow-arrow">➔</div>
+                <div class="flow-step">
+                    <div class="step-number">3</div>
+                    <h3>Data Extraction</h3>
+                    <p>OCR extracts details; face verification ensures authenticity.</p>
+                </div>
+                <div class="flow-arrow">➔</div>
+                <div class="flow-step">
+                    <div class="step-number">4</div>
+                    <h3>Secure Storage</h3>
+                    <p>Data is encrypted and stored in our robust database.</p>
+                </div>
+                <div class="flow-arrow">➔</div>
+                <div class="flow-step">
+                    <div class="step-number">5</div>
+                    <h3>Data Sharing</h3>
+                    <p>Share verified details with government or companies.</p>
+                </div>
+            </div>
+            <div class="workflow-cta">
+                <a href="/" class="cta-button">Try It Now</a>
+            </div>
+        </section>
+
+        <section class="section security-section">
+            <h2>Uncompromised Security</h2>
+            <p class="section-text">Your trust is our priority. We employ state-of-the-art security measures to protect your data:</p>
+            <ul class="security-list">
+                <li><strong>End-to-End Encryption:</strong> All data transmissions are secured with AES-256 encryption.</li>
+                <li><strong>Biometric Authentication:</strong> Face verification ensures only you can access your profile.</li>
+                <li><strong>Compliance:</strong> Adheres to GDPR, CCPA, and local data protection laws.</li>
+                <li><strong>Regular Audits:</strong> Independent security audits to maintain integrity.</li>
+            </ul>
+        </section>
+
+        <section class="section integration-section">
+            <h2>Bridging the Gap</h2>
+            <p class="section-text">Our platform serves as a trusted intermediary, simplifying KYC for all stakeholders:</p>
+            <div class="integration-content">
+                <div class="integration-item">
+                    <h3>For Individuals</h3>
+                    <p>Avoid repetitive KYC submissions. Register once and share verified data securely with any authorized entity.</p>
+                </div>
+                <div class="integration-item">
+                    <h3>For Government</h3>
+                    <p>Access verified citizen data instantly for schemes, subsidies, or services, reducing fraud and manual effort.</p>
+                </div>
+                <div class="integration-item">
+                    <h3>For Companies</h3>
+                    <p>Streamline customer onboarding with pre-verified KYC data, ensuring compliance and efficiency.</p>
+                </div>
+            </div>
+            <div class="integration-cta">
+                <a href="#contact" class="cta-button">Partner with Us</a>
+            </div>
+        </section>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
