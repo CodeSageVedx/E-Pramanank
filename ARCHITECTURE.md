@@ -227,25 +227,29 @@ flowchart TB
 ## 7. Deployment View (Hybrid)
 
 ```mermaid
-deploymentDiagram
-    node "Client" {
-        artifact "Browser"
-    }
-    node "Django Server" {
-        artifact "Django"
-        artifact "ReportLab"
-        artifact "PyPDF2"
-    }
-    node "Node Server (Optional)" {
-        artifact "Express"
-        artifact "pdf-lib"
-    }
-    node "Database" {
-        artifact "SQLite"
-    }
-    Browser --> Django : HTTPS
+flowchart TB
+    subgraph Client["Client"]
+        Browser[Browser]
+    end
+
+    subgraph DjangoServer["Django Server"]
+        Django[Django]
+        ReportLab[ReportLab]
+        PyPDF2[PyPDF2]
+    end
+
+    subgraph NodeServer["Node Server (Optional)"]
+        Express[Express]
+        PdfLib[pdf-lib]
+    end
+
+    subgraph Database["Database"]
+        SQLite[(SQLite)]
+    end
+
+    Browser -->|HTTPS| Django
     Django --> SQLite
-    Browser -.-> "Node Server (Optional)" : encrypt-pdf (optional)
+    Browser -.->|encrypt-pdf optional| NodeServer
 ```
 
 ---
